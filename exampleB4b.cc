@@ -30,11 +30,7 @@
 #include "B4DetectorConstruction.hh"
 #include "B4bActionInitialization.hh"
 
-#ifdef G4MULTITHREADED
-#include "G4MTRunManager.hh"
-#else
-#include "G4RunManager.hh"
-#endif
+#include "RunManager.hh"
 
 #include "G4UImanager.hh"
 #include "G4UIcommand.hh"
@@ -97,15 +93,13 @@ int main(int argc,char** argv)
   //
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
   
-  // Construct the default run manager
+  // Construct the custom run manager
   //
+  auto * runManager = new B4c::TheRunManager();
 #ifdef G4MULTITHREADED
-  auto runManager = new G4MTRunManager;
   if ( nThreads > 0 ) { 
     runManager->SetNumberOfThreads(nThreads);
   }  
-#else
-  auto runManager = new G4RunManager;
 #endif
 
   // Set mandatory initialization classes
