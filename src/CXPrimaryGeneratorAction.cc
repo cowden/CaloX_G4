@@ -24,10 +24,10 @@
 // ********************************************************************
 //
 // 
-/// \file B4PrimaryGeneratorAction.cc
-/// \brief Implementation of the B4PrimaryGeneratorAction class
+/// \file CXPrimaryGeneratorAction.cc
+/// \brief Implementation of the CXPrimaryGeneratorAction class
 
-#include "B4PrimaryGeneratorAction.hh"
+#include "CXPrimaryGeneratorAction.hh"
 
 #include "G4RunManager.hh"
 #include "G4LogicalVolumeStore.hh"
@@ -40,11 +40,11 @@
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
 
-#include "B4DetectorConstruction.hh"
+#include "CXDetectorConstruction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4PrimaryGeneratorAction::B4PrimaryGeneratorAction(B4DetectorConstruction* det)
+CXPrimaryGeneratorAction::CXPrimaryGeneratorAction(CXDetectorConstruction* det)
  : G4VUserPrimaryGeneratorAction(),
    fParticleGun(nullptr),fDetector(det)
 {
@@ -63,14 +63,14 @@ B4PrimaryGeneratorAction::B4PrimaryGeneratorAction(B4DetectorConstruction* det)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4PrimaryGeneratorAction::~B4PrimaryGeneratorAction()
+CXPrimaryGeneratorAction::~CXPrimaryGeneratorAction()
 {
   delete fParticleGun;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
+void CXPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
   // This function is called at the begining of event
 
@@ -95,7 +95,7 @@ void B4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     msg << "World volume of box shape not found." << G4endl;
     msg << "Perhaps you have changed geometry." << G4endl;
     msg << "The gun will be place in the center.";
-    G4Exception("B4PrimaryGeneratorAction::GeneratePrimaries()",
+    G4Exception("CXPrimaryGeneratorAction::GeneratePrimaries()",
       "MyCode0002", JustWarning, msg);
   } 
   

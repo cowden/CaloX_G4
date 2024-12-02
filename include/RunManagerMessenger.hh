@@ -7,7 +7,7 @@ class G4UIcommand;
 class G4UIdirectory;
 class G4UIcmdWithAnInteger;
 
-namespace B4c {
+namespace CX {
 class RunManagerMessenger: public G4UImessenger {
     public:
     RunManagerMessenger(TheRunManager *);

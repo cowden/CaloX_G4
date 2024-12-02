@@ -23,32 +23,50 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
-/// \file B4bActionInitialization.hh
-/// \brief Definition of the B4bActionInitialization class
+// 
+/// \file CXPrimaryGeneratorAction.hh
+/// \brief Definition of the CXPrimaryGeneratorAction class
 
-#ifndef B4bActionInitialization_h
-#define B4bActionInitialization_h 1
+#ifndef CXPrimaryGeneratorAction_h
+#define CXPrimaryGeneratorAction_h 1
 
-#include "G4VUserActionInitialization.hh"
+#include "G4VUserPrimaryGeneratorAction.hh"
+#include "globals.hh"
 
-class B4DetectorConstruction;
+#include "G4ParticleGun.hh"
+#include "CXDetectorConstruction.hh"
+#include "CLHEP/Random/Random.h"
 
-/// Action initialization class.
+
+class G4ParticleGun;
+class G4Event;
+
+/// The primary generator action class with particle gum.
 ///
+/// It defines a single particle which hits the calorimeter 
+/// perpendicular to the input face. The type of the particle
+/// can be changed via the G4 build-in commands of G4ParticleGun class 
+/// (see the macros provided with this example).
 
-class B4bActionInitialization : public G4VUserActionInitialization
+class CXPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
-  public:
-    B4bActionInitialization(B4DetectorConstruction*);
-    virtual ~B4bActionInitialization();
+public:
+  CXPrimaryGeneratorAction(CXDetectorConstruction* det);    
+  virtual ~CXPrimaryGeneratorAction();
 
-    virtual void BuildForMaster() const;
-    virtual void Build() const;
-
-  private:
-    B4DetectorConstruction* fDetector;
+  virtual void GeneratePrimaries(G4Event* event);
+  
+  // set methods
+  void SetRandomFlag(G4bool value);
+  G4ParticleGun* GetParticleGun() {return fParticleGun;};
+  
+private:
+  G4ParticleGun*  fParticleGun; // G4 particle gun
+  CXDetectorConstruction* fDetector;
+  CLHEP::HepRandom ran1;
+  double Ebeam;
 };
 
-#endif
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+#endif

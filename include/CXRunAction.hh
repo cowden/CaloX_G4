@@ -24,76 +24,46 @@
 // ********************************************************************
 //
 // 
-/// \file B4bRunData.hh
-/// \brief Definition of the B4bRunData class
+/// \file CXRunAction.hh
+/// \brief Definition of the CXRunAction class
 
-#ifndef B4bRunData_h
-#define B4bRunData_h 1
+#ifndef CXRunAction_h
+#define CXRunAction_h 1
 
-#include "G4Run.hh"
+#include "G4UserRunAction.hh"
 #include "globals.hh"
 
-#include <array>
+class G4Run;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-const G4int kAbs = 0;
-const G4int kGap = 1;
-const G4int kDim = 2;
-
-///  Run data class
+/// Run action class
 ///
-/// It defines data members to hold the energy deposit and track lengths
-/// of charged particles in Absober and Gap layers.
-/// 
-/// In order to reduce the number of data members a 2-dimensions array 
-/// is introduced for each quantity:
-/// - fEdep[], fTrackLength[].
+/// It accumulates statistic and computes dispersion of the energy deposit 
+/// and track lengths of charged particles with use of analysis tools:
+/// H1D histograms are created in BeginOfRunAction() for the following 
+/// physics quantities:
+/// - Edep in absorber
+/// - Edep in gap
+/// - Track length in absorber
+/// - Track length in gap
+/// The same values are also saved in the ntuple.
+/// The histograms and ntuple are saved in the output file in a format
+/// accoring to a selected technology in CXAnalysis.hh.
 ///
-/// The data are collected step by step in B4bSteppingAction, and
-/// the accumulated values are filled in histograms and entuple
-/// event by event in B4EventAction.
+/// In EndOfRunAction(), the accumulated statistic and computed 
+/// dispersion is printed.
+///
 
-class B4bRunData : public G4Run
+class CXRunAction : public G4UserRunAction
 {
-public:
-  B4bRunData();
-  virtual ~B4bRunData();
+  public:
+    CXRunAction();
+    virtual ~CXRunAction();
 
-  void Add(G4int id, G4double de, G4double dl);
-  void FillPerEvent();
+    virtual G4Run* GenerateRun();
 
-  void Reset();
-
-  // Get methods
-  G4String  GetVolumeName(G4int id) const;
-  G4double  GetEdep(G4int id) const;
-  G4double  GetTrackLength(G4int id) const; 
-
-private:
-  std::array<G4String, kDim>  fVolumeNames;
-  std::array<G4double, kDim>  fEdep;
-  std::array<G4double, kDim>  fTrackLength; 
+    virtual void BeginOfRunAction(const G4Run*);
+    virtual void   EndOfRunAction(const G4Run*);
 };
-
-// inline functions
-
-inline void B4bRunData::Add(G4int id, G4double de, G4double dl) {
-  fEdep[id] += de; 
-  fTrackLength[id] += dl;
-}
-
-inline G4String  B4bRunData::GetVolumeName(G4int id) const {
-  return fVolumeNames[id];
-}
-
-inline G4double  B4bRunData::GetEdep(G4int id) const {
-  return fEdep[id];
-}   
-
-inline G4double  B4bRunData::GetTrackLength(G4int id) const {
-  return fTrackLength[id];
-}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

@@ -24,11 +24,11 @@
 // ********************************************************************
 //
 //
-/// \file exampleB4b.cc
-/// \brief Main program of the B4b example
+/// \file calox-hgcal.cc
+/// \brief Main program
 
-#include "B4DetectorConstruction.hh"
-#include "B4bActionInitialization.hh"
+#include "CXDetectorConstruction.hh"
+#include "CXActionInitialization.hh"
 
 #include "RunManager.hh"
 
@@ -46,7 +46,7 @@
 namespace {
   void PrintUsage() {
     G4cerr << " Usage: " << G4endl;
-    G4cerr << " exampleB4a [-m macro ] [-u UIsession] [-t nThreads]" << G4endl;
+    G4cerr << " calox-hgcal [-m macro ] [-u UIsession] [-t nThreads]" << G4endl;
     G4cerr << "   note: -t option is available only for multi-threaded mode."
            << G4endl;
   }
@@ -95,7 +95,7 @@ int main(int argc,char** argv)
   
   // Construct the custom run manager
   //
-  auto * runManager = new B4c::TheRunManager();
+  auto * runManager = new CX::TheRunManager();
 #ifdef G4MULTITHREADED
   if ( nThreads > 0 ) { 
     runManager->SetNumberOfThreads(nThreads);
@@ -104,13 +104,13 @@ int main(int argc,char** argv)
 
   // Set mandatory initialization classes
   //
-  auto detConstruction = new B4DetectorConstruction();
+  auto detConstruction = new CXDetectorConstruction();
   runManager->SetUserInitialization(detConstruction);
 
   auto physicsList = new FTFP_BERT;
   runManager->SetUserInitialization(physicsList);
     
-  auto actionInitialization = new B4bActionInitialization(detConstruction);
+  auto actionInitialization = new CXActionInitialization(detConstruction);
   runManager->SetUserInitialization(actionInitialization);
   
   // Initialize visualization

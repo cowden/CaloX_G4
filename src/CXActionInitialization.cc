@@ -24,51 +24,51 @@
 // ********************************************************************
 //
 //
-/// \file B4bActionInitialization.cc
-/// \brief Implementation of the B4bActionInitialization class
+/// \file CXActionInitialization.cc
+/// \brief Implementation of the CXActionInitialization class
 
-#include "B4bActionInitialization.hh"
-#include "B4PrimaryGeneratorAction.hh"
-#include "B4bRunAction.hh"
-#include "B4bEventAction.hh"
-#include "B4xTrackingAction.hh"
-#include "B4bSteppingAction.hh"
+#include "CXActionInitialization.hh"
+#include "CXPrimaryGeneratorAction.hh"
+#include "CXRunAction.hh"
+#include "CXEventAction.hh"
+#include "CXTrackingAction.hh"
+#include "CXSteppingAction.hh"
 #include "G4MTRunManager.hh"
-#include "B4DetectorConstruction.hh"
+#include "CXDetectorConstruction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4bActionInitialization::B4bActionInitialization(B4DetectorConstruction* det)
+CXActionInitialization::CXActionInitialization(CXDetectorConstruction* det)
  : G4VUserActionInitialization(),fDetector(det)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4bActionInitialization::~B4bActionInitialization()
+CXActionInitialization::~CXActionInitialization()
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4bActionInitialization::BuildForMaster() const
+void CXActionInitialization::BuildForMaster() const
 {
-  SetUserAction(new B4bRunAction);
+  SetUserAction(new CXRunAction);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4bActionInitialization::Build() const
+void CXActionInitialization::Build() const
 {
-  B4PrimaryGeneratorAction* primary = new B4PrimaryGeneratorAction(fDetector);
+  CXPrimaryGeneratorAction* primary = new CXPrimaryGeneratorAction(fDetector);
   SetUserAction(primary);
-  //SetUserAction(new B4PrimaryGeneratorAction);
+  //SetUserAction(new CXPrimaryGeneratorAction);
 
-  SetUserAction(new B4bRunAction);
-  // SetUserAction(new B4bEventAction);
-  B4bEventAction* eventaction = new B4bEventAction(fDetector,primary);
+  SetUserAction(new CXRunAction);
+  // SetUserAction(new CXEventAction);
+  CXEventAction* eventaction = new CXEventAction(fDetector,primary);
   SetUserAction(eventaction);  
 
-  SetUserAction(new B4xTrackingAction);
-  SetUserAction(new B4bSteppingAction(eventaction));
+  SetUserAction(new CXTrackingAction);
+  SetUserAction(new CXSteppingAction(eventaction));
 }  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -24,15 +24,15 @@
 // ********************************************************************
 //
 // 
-/// \file B4bEventAction.hh
-/// \brief Definition of the B4bEventAction class
+/// \file CXEventAction.hh
+/// \brief Definition of the CXEventAction class
 
-#ifndef B4bEventAction_h
-#define B4bEventAction_h 1
+#ifndef CXEventAction_h
+#define CXEventAction_h 1
 
 #include "G4UserEventAction.hh"
-#include "B4PrimaryGeneratorAction.hh"
-#include "B4DetectorConstruction.hh"
+#include "CXPrimaryGeneratorAction.hh"
+#include "CXDetectorConstruction.hh"
 #include "G4SteppingManager.hh"
 
 #include "globals.hh"
@@ -57,13 +57,13 @@ using namespace std;
 ///
 /// In EndOfEventAction(), it prints the accumulated quantities of the energy 
 /// deposit and track lengths of charged particles in Absober and Gap layers 
-/// stored in B4bRunData object.
+/// stored in CXRunData object.
 
-class B4bEventAction : public G4UserEventAction
+class CXEventAction : public G4UserEventAction
 {
   public:
-    B4bEventAction(B4DetectorConstruction* det,B4PrimaryGeneratorAction* prim);
-    virtual ~B4bEventAction();
+    CXEventAction(CXDetectorConstruction* det,CXPrimaryGeneratorAction* prim);
+    virtual ~CXEventAction();
 
     virtual void  BeginOfEventAction(const G4Event* event);
     virtual void    EndOfEventAction(const G4Event* event);
@@ -74,8 +74,8 @@ class B4bEventAction : public G4UserEventAction
 
   private:
     // methods
-    B4DetectorConstruction* fDetector;
-    B4PrimaryGeneratorAction* primary;
+    CXDetectorConstruction* fDetector;
+    CXPrimaryGeneratorAction* primary;
 
     void   clearTTreeVectors();   
     void   getCellSize();
@@ -232,9 +232,9 @@ class B4bEventAction : public G4UserEventAction
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 /*
-inline void B4bEventAction::AccumulateCaloHits(CaloStepData aHit){
+inline void CXEventAction::AccumulateCaloHits(CaloStepData aHit){
 
-   std::cout<<"B4bEventAction::AccumulateCaloHits  track "<<aHit.trackid<<"  pid "<<aHit.pid<<"  edep "<<aHit.edep<<std::endl;
+   std::cout<<"CXEventAction::AccumulateCaloHits  track "<<aHit.trackid<<"  pid "<<aHit.pid<<"  edep "<<aHit.edep<<std::endl;
 }
 */
 

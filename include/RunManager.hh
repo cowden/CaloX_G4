@@ -3,7 +3,7 @@
 #include "G4MTRunManager.hh"
 #include "globals.hh"
 
-namespace B4c {
+namespace CX {
 
 class RunManagerMessenger;
 

@@ -23,50 +23,32 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// 
-/// \file B4PrimaryGeneratorAction.hh
-/// \brief Definition of the B4PrimaryGeneratorAction class
+//
+/// \file CXActionInitialization.hh
+/// \brief Definition of the CXActionInitialization class
 
-#ifndef B4PrimaryGeneratorAction_h
-#define B4PrimaryGeneratorAction_h 1
+#ifndef CXActionInitialization_h
+#define CXActionInitialization_h 1
 
-#include "G4VUserPrimaryGeneratorAction.hh"
-#include "globals.hh"
+#include "G4VUserActionInitialization.hh"
 
-#include "G4ParticleGun.hh"
-#include "B4DetectorConstruction.hh"
-#include "CLHEP/Random/Random.h"
+class CXDetectorConstruction;
 
-
-class G4ParticleGun;
-class G4Event;
-
-/// The primary generator action class with particle gum.
+/// Action initialization class.
 ///
-/// It defines a single particle which hits the calorimeter 
-/// perpendicular to the input face. The type of the particle
-/// can be changed via the G4 build-in commands of G4ParticleGun class 
-/// (see the macros provided with this example).
 
-class B4PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+class CXActionInitialization : public G4VUserActionInitialization
 {
-public:
-  B4PrimaryGeneratorAction(B4DetectorConstruction* det);    
-  virtual ~B4PrimaryGeneratorAction();
+  public:
+    CXActionInitialization(CXDetectorConstruction*);
+    virtual ~CXActionInitialization();
 
-  virtual void GeneratePrimaries(G4Event* event);
-  
-  // set methods
-  void SetRandomFlag(G4bool value);
-  G4ParticleGun* GetParticleGun() {return fParticleGun;};
-  
-private:
-  G4ParticleGun*  fParticleGun; // G4 particle gun
-  B4DetectorConstruction* fDetector;
-  CLHEP::HepRandom ran1;
-  double Ebeam;
+    virtual void BuildForMaster() const;
+    virtual void Build() const;
+
+  private:
+    CXDetectorConstruction* fDetector;
 };
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 #endif
+

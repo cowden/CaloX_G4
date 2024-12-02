@@ -3,18 +3,18 @@
 
 #include "RunManagerMessenger.hh"
 
-B4c::TheRunManager::TheRunManager()
+CX::TheRunManager::TheRunManager()
 :G4MTRunManager()	
 {
     msngr_ = new RunManagerMessenger(this);
 }
 
-B4c::TheRunManager::~TheRunManager()
+CX::TheRunManager::~TheRunManager()
 {
     delete msngr_;
 }
 
-G4bool B4c::TheRunManager::InitializeSeeds(G4int nevnts) {
+G4bool CX::TheRunManager::InitializeSeeds(G4int nevnts) {
     auto helper = G4RNGHelper::GetInstance();
     helper->Clear();
 

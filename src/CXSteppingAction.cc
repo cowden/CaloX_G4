@@ -24,12 +24,12 @@
 // ********************************************************************
 //
 // 
-/// \file B4bSteppingAction.cc
-/// \brief Implementation of the B4bSteppingAction class
+/// \file CXSteppingAction.cc
+/// \brief Implementation of the CXSteppingAction class
 
-#include "B4bSteppingAction.hh"
-#include "B4bRunData.hh"
-#include "B4DetectorConstruction.hh"
+#include "CXSteppingAction.hh"
+#include "CXRunData.hh"
+#include "CXDetectorConstruction.hh"
 
 #include "G4Step.hh"
 #include "G4RunManager.hh"
@@ -42,8 +42,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4bSteppingAction::B4bSteppingAction(
-                      B4bEventAction* eventAction)
+CXSteppingAction::CXSteppingAction(
+                      CXEventAction* eventAction)
   : G4UserSteppingAction(),
     fEventAction(eventAction)
 {
@@ -51,13 +51,13 @@ B4bSteppingAction::B4bSteppingAction(
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4bSteppingAction::~B4bSteppingAction()
+CXSteppingAction::~CXSteppingAction()
 { 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4bSteppingAction::UserSteppingAction(const G4Step* step)
+void CXSteppingAction::UserSteppingAction(const G4Step* step)
 {
    G4Track* track = step ->GetTrack();
 // Collect energy and track length step by step
@@ -113,7 +113,7 @@ void B4bSteppingAction::UserSteppingAction(const G4Step* step)
 
   fEventAction->StepAnalysis(step);
 
-}  // end of B4bSteppingAction::UserSteppingAction.
+}  // end of CXSteppingAction::UserSteppingAction.
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

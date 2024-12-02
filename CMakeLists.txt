@@ -37,8 +37,8 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(exampleB4b exampleB4b.cc ${sources} ${headers})
-target_link_libraries(exampleB4b ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+add_executable(calox-hgcal calox-hgcal.cc ${sources} ${headers})
+target_link_libraries(calox-hgcal ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
@@ -62,4 +62,4 @@ endforeach()
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS exampleB4b DESTINATION bin)
+install(TARGETS calox-hgcal DESTINATION bin)

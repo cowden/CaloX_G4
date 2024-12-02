@@ -24,11 +24,11 @@
 // ********************************************************************
 //
 // 
-/// \file B4bEventAction.cc
-/// \brief Implementation of the B4bEventAction class
+/// \file CXEventAction.cc
+/// \brief Implementation of the CXEventAction class
 
-#include "B4bEventAction.hh"
-#include "B4bRunData.hh"
+#include "CXEventAction.hh"
+#include "CXRunData.hh"
 
 #include "G4RunManager.hh"
 #include "G4Event.hh"
@@ -42,7 +42,7 @@
 
 #include "G4Step.hh"
 
-#include "B4PrimaryGeneratorAction.hh"
+#include "CXPrimaryGeneratorAction.hh"
 
 #include "Randomize.hh"
 #include <iomanip>
@@ -66,7 +66,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4bEventAction::B4bEventAction(B4DetectorConstruction* det,B4PrimaryGeneratorAction* prim)
+CXEventAction::CXEventAction(CXDetectorConstruction* det,CXPrimaryGeneratorAction* prim)
  : G4UserEventAction(),fDetector(det),primary(prim)
 {  
 
@@ -271,7 +271,7 @@ B4bEventAction::B4bEventAction(B4DetectorConstruction* det,B4PrimaryGeneratorAct
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4bEventAction::~B4bEventAction()
+CXEventAction::~CXEventAction()
 {
   fout->Write();
   fout->Close();
@@ -285,7 +285,7 @@ B4bEventAction::~B4bEventAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4bEventAction::BeginOfEventAction(const G4Event* /*event*/)
+void CXEventAction::BeginOfEventAction(const G4Event* /*event*/)
 {  
   clearTTreeVectors();
   getCellSize();
@@ -308,7 +308,7 @@ void B4bEventAction::BeginOfEventAction(const G4Event* /*event*/)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4bEventAction::EndOfEventAction(const G4Event* event)
+void CXEventAction::EndOfEventAction(const G4Event* event)
 {   
    // std::cout<<"EndOfEventAction... edepSum[0]  "<<edepSum[0]<<std::endl;
    histo1D["edepALL"]->Fill(edepSum[0]);
@@ -320,7 +320,7 @@ void B4bEventAction::EndOfEventAction(const G4Event* event)
    mRun=_CaloXG4RunNumber;
    mEvent++;
 
-   // std::cout<<"B4bEventAction::EndOfEventAction...   loop over hits "<<std::endl;
+   // std::cout<<"CXEventAction::EndOfEventAction...   loop over hits "<<std::endl;
 
    // double Ebeam = primary->GetParticleGun()->GetParticleEnergy();
    mGenPID.push_back(primary->GetParticleGun()->GetParticleDefinition()->GetPDGEncoding());
@@ -444,13 +444,13 @@ void B4bEventAction::EndOfEventAction(const G4Event* event)
 
    tree->Fill();
 
-} //  end of B4bEventAction::EndOfEventAction  
+} //  end of CXEventAction::EndOfEventAction  
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4bEventAction::AccumulateCaloHits(CaloStepData aHit){
-      // std::cout<<"B4bEventAction::AccumulateCaloHits  track "<<aHit.trackid<<"  pid "<<aHit.pid<<"  edep "<<aHit.edep<<std::endl;
+void CXEventAction::AccumulateCaloHits(CaloStepData aHit){
+      // std::cout<<"CXEventAction::AccumulateCaloHits  track "<<aHit.trackid<<"  pid "<<aHit.pid<<"  edep "<<aHit.edep<<std::endl;
    // if(aHit.edep>0.000001) { 
    if(aHit.edep>0.0) { 
       double tA=TimeTOFAdjusted(aHit.globaltime,aHit.z);
@@ -477,7 +477,7 @@ void B4bEventAction::AccumulateCaloHits(CaloStepData aHit){
 }
 
 // -----------------------------------------------------------------------
-void B4bEventAction::FillSecondaries(const G4Step* step){
+void CXEventAction::FillSecondaries(const G4Step* step){
       // THis is called from SteppingAction if(tkstatus==fStopAndKill && absPdgCode>100)
       // futher selection of interactions should be done in this code.
 
@@ -611,16 +611,16 @@ void B4bEventAction::FillSecondaries(const G4Step* step){
      }
     }  // end of if(printFlag) 
 
-}  // end of B4bEventAction::FillSecondaries.
+}  // end of CXEventAction::FillSecondaries.
 
 // -----------------------------------------------------------------------
-double B4bEventAction::TimeTOFAdjusted(double t, double  z){
+double CXEventAction::TimeTOFAdjusted(double t, double  z){
     // return the time with subtraction of TOF along Z. 
     return t-(z+worldZhalf)/300.0;  // 300 mm/1 ns
 }
 
 // -----------------------------------------------------------------------
-void B4bEventAction::StepAnalysis(const G4Step* step){
+void CXEventAction::StepAnalysis(const G4Step* step){
    double edep = step->GetTotalEnergyDeposit();
    G4Track* track = step->GetTrack();
    if(edep>0.0) {
@@ -666,7 +666,7 @@ void B4bEventAction::StepAnalysis(const G4Step* step){
 }
 
 // -----------------------------------------------------------------------
-void B4bEventAction::clearTTreeVectors(){
+void CXEventAction::clearTTreeVectors(){
    mNxCell=0;
    mNyCell=0;
    mNzCell=0;
@@ -751,9 +751,9 @@ void B4bEventAction::clearTTreeVectors(){
 }
 
 // -----------------------------------------------------------------------
-void B4bEventAction::getCellSize(){
+void CXEventAction::getCellSize(){
   auto runData
-    = static_cast<B4bRunData*>(
+    = static_cast<CXRunData*>(
         G4RunManager::GetRunManager()->GetNonConstCurrentRun());
   runData->Reset(); 
 

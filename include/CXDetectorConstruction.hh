@@ -24,11 +24,11 @@
 // ********************************************************************
 //
 // 
-/// \file B4DetectorConstruction.hh
-/// \brief Definition of the B4DetectorConstruction class
+/// \file CXDetectorConstruction.hh
+/// \brief Definition of the CXDetectorConstruction class
 
-#ifndef B4DetectorConstruction_h
-#define B4DetectorConstruction_h 1
+#ifndef CXDetectorConstruction_h
+#define CXDetectorConstruction_h 1
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
@@ -50,11 +50,11 @@ class G4GlobalMagFieldMessenger;
 /// In addition a transverse uniform magnetic field is defined 
 /// via G4GlobalMagFieldMessenger class.
 
-class B4DetectorConstruction : public G4VUserDetectorConstruction
+class CXDetectorConstruction : public CXVUserDetectorConstruction
 {
   public:
-    B4DetectorConstruction();
-    virtual ~B4DetectorConstruction();
+    CXDetectorConstruction();
+    virtual ~CXDetectorConstruction();
 
   public:
     virtual G4VPhysicalVolume* Construct();
@@ -84,11 +84,11 @@ class B4DetectorConstruction : public G4VUserDetectorConstruction
 
 // inline functions
 
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetAbsorberPV() const { 
+inline const G4VPhysicalVolume* CXDetectorConstruction::GetAbsorberPV() const { 
   return fAbsorberPV; 
 }
 
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetGapPV() const  { 
+inline const G4VPhysicalVolume* CXDetectorConstruction::GetGapPV() const  { 
   return fGapPV; 
 }
      

@@ -36,14 +36,14 @@
 //
 // ---------------------------------------------------------------
 
-#include "B4xTrackingAction.hh"
+#include "CXTrackingAction.hh"
 #include "G4ParticleTable.hh"
 #include "globals.hh"
 
 #include "G4Track.hh"
 
 /////////////////////////////////////////////////////////
-B4xTrackingAction::B4xTrackingAction()
+CXTrackingAction::CXTrackingAction()
 /////////////////////////////////////////////////////////
   : fpTrackingManager(0)
 {
@@ -62,12 +62,12 @@ B4xTrackingAction::B4xTrackingAction()
 }
 
 /////////////////////////////////////////////////////////
-B4xTrackingAction::~B4xTrackingAction()
+CXTrackingAction::~CXTrackingAction()
 /////////////////////////////////////////////////////////
 {;}
 
 //
-void B4xTrackingAction::PreUserTrackingAction(const G4Track* track){
+void CXTrackingAction::PreUserTrackingAction(const G4Track* track){
   /*
    const G4DynamicParticle* dynamicParticle= track->GetDynamicParticle();
    G4int pdgcode=dynamicParticle->GetPDGcode();
@@ -84,14 +84,14 @@ void B4xTrackingAction::PreUserTrackingAction(const G4Track* track){
 }
 
 //
-void B4xTrackingAction::PostUserTrackingAction(const G4Track* track){
+void CXTrackingAction::PostUserTrackingAction(const G4Track* track){
 
 }
 
 
 
 /////////////////////////////////////////////////////////
-void B4xTrackingAction::
+void CXTrackingAction::
      SetTrackingManagerPointer(G4TrackingManager* pValue)
 /////////////////////////////////////////////////////////
 {

@@ -24,12 +24,12 @@
 // ********************************************************************
 //
 //
-/// \file B4bRunAction.cc
-/// \brief Implementation of the B4bRunAction class
+/// \file CXRunAction.cc
+/// \brief Implementation of the CXRunAction class
 
-#include "B4bRunAction.hh"
-#include "B4bRunData.hh"
-#include "B4Analysis.hh"
+#include "CXRunAction.hh"
+#include "CXRunData.hh"
+#include "CXAnalysis.hh"
 
 #include "G4Run.hh"
 #include "G4RunManager.hh"
@@ -38,7 +38,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4bRunAction::B4bRunAction()
+CXRunAction::CXRunAction()
  : G4UserRunAction()
 { 
   // set printing event number per each event
@@ -46,7 +46,7 @@ B4bRunAction::B4bRunAction()
 
   // Create analysis manager
   // The choice of analysis technology is done via selectin of a namespace
-  // in B4Analysis.hh
+  // in CXAnalysis.hh
   auto analysisManager = G4AnalysisManager::Instance();
   G4cout << "Using " << analysisManager->GetType() << G4endl;
 
@@ -68,7 +68,7 @@ B4bRunAction::B4bRunAction()
 
   // Creating ntuple
   //
-  analysisManager->CreateNtuple("B4", "Edep and TrackL");
+  analysisManager->CreateNtuple("CX", "Edep and TrackL");
   analysisManager->CreateNtupleDColumn("Eabs");
   analysisManager->CreateNtupleDColumn("Egap");
   analysisManager->CreateNtupleDColumn("Labs");
@@ -78,21 +78,21 @@ B4bRunAction::B4bRunAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4bRunAction::~B4bRunAction()
+CXRunAction::~CXRunAction()
 {
   delete G4AnalysisManager::Instance();  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4Run* B4bRunAction::GenerateRun()
+G4Run* CXRunAction::GenerateRun()
 {
-  return (new B4bRunData);
+  return (new CXRunData);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4bRunAction::BeginOfRunAction(const G4Run* run)
+void CXRunAction::BeginOfRunAction(const G4Run* run)
 { 
   G4cout << "### Run " << run->GetRunID() << " start." << G4endl;
 
@@ -104,13 +104,13 @@ void B4bRunAction::BeginOfRunAction(const G4Run* run)
 
   // Open an output file
   //
-  G4String fileName = "B4";
+  G4String fileName = "CX";
   analysisManager->OpenFile(fileName);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4bRunAction::EndOfRunAction(const G4Run* /*aRun*/)
+void CXRunAction::EndOfRunAction(const G4Run* /*aRun*/)
 {
   // print histogram statistics
   //

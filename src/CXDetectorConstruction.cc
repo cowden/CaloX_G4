@@ -24,10 +24,10 @@
 // ********************************************************************
 //
 // 
-/// \file B4DetectorConstruction.cc
-/// \brief Implementation of the B4DetectorConstruction class
+/// \file CXDetectorConstruction.cc
+/// \brief Implementation of the CXDetectorConstruction class
 
-#include "B4DetectorConstruction.hh"
+#include "CXDetectorConstruction.hh"
 
 #include "G4Material.hh"
 #include "G4NistManager.hh"
@@ -53,11 +53,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4ThreadLocal 
-G4GlobalMagFieldMessenger* B4DetectorConstruction::fMagFieldMessenger = nullptr; 
+G4GlobalMagFieldMessenger* CXDetectorConstruction::fMagFieldMessenger = nullptr; 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4DetectorConstruction::B4DetectorConstruction()
+CXDetectorConstruction::CXDetectorConstruction()
  : G4VUserDetectorConstruction(),
    fAbsorberPV(nullptr),
    fGapPV(nullptr),
@@ -67,13 +67,13 @@ B4DetectorConstruction::B4DetectorConstruction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B4DetectorConstruction::~B4DetectorConstruction()
+CXDetectorConstruction::~CXDetectorConstruction()
 { 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4VPhysicalVolume* B4DetectorConstruction::Construct()
+G4VPhysicalVolume* CXDetectorConstruction::Construct()
 {
   // Define materials 
   DefineMaterials();
@@ -84,7 +84,7 @@ G4VPhysicalVolume* B4DetectorConstruction::Construct()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4DetectorConstruction::DefineMaterials()
+void CXDetectorConstruction::DefineMaterials()
 { 
   // Lead material defined using NIST Manager
   auto nistManager = G4NistManager::Instance();
@@ -110,7 +110,7 @@ void B4DetectorConstruction::DefineMaterials()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4VPhysicalVolume* B4DetectorConstruction::DefineVolumes()
+G4VPhysicalVolume* CXDetectorConstruction::DefineVolumes()
 {
   // Geometry parameters
   // auto layerThickness = 0.5*cm;
@@ -133,7 +133,7 @@ G4VPhysicalVolume* B4DetectorConstruction::DefineVolumes()
   if ( ! defaultMaterial || ! calorMaterial ) {
     G4ExceptionDescription msg;
     msg << "Cannot retrieve materials already defined."; 
-    G4Exception("B4DetectorConstruction::DefineVolumes()",
+    G4Exception("CXDetectorConstruction::DefineVolumes()",
       "MyCode0001", FatalException, msg);
   }  
    
@@ -258,7 +258,7 @@ G4VPhysicalVolume* B4DetectorConstruction::DefineVolumes()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B4DetectorConstruction::ConstructSDandField()
+void CXDetectorConstruction::ConstructSDandField()
 { 
   // Create global magnetic field messenger.
   // Uniform magnetic field is then created automatically if

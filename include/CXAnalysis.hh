@@ -23,38 +23,15 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// 
-/// \file B4bSteppingAction.hh
-/// \brief Definition of the B4bSteppingAction class
+//
+/// \file CXAnalysis.hh
+/// \brief Selection of the analysis technology
 
-#ifndef B4bSteppingAction_h
-#define B4bSteppingAction_h 1
+#ifndef CXAnalysis_h
+#define CXAnalysis_h 1
 
-#include "G4UserSteppingAction.hh"
-
-#include "CaloDataStruc.h"
-
-#include "B4bEventAction.hh"
-// class B4bEventAction;
-
-/// Stepping action class.
-///
-/// In UserSteppingAction() there are collected the energy deposit and track 
-/// lengths of charged particles in Absober and Gap layers and
-/// updated in B4bRunData object.
-
-class B4bSteppingAction : public G4UserSteppingAction
-{
-public:
-  B4bSteppingAction(B4bEventAction* eventAction);
-  virtual ~B4bSteppingAction();
-
-  virtual void UserSteppingAction(const G4Step* step);
-    
-private:
-  B4bEventAction*  fEventAction;
-};
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#include "G4AnalysisManager.hh"
+//#include "g4csv.hh"
+//#include "g4xml.hh"
 
 #endif

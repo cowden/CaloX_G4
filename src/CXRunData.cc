@@ -24,61 +24,65 @@
 // ********************************************************************
 //
 //
-//
-//
-//---------------------------------------------------------------
-//
-// G4UserTrackingAction.hh
-//
-// class description:
-//   This class represents actions taken place by the user at 
-//   the start/end point of processing one track. 
-//
-// Contact:
-//   Questions and comments to this code should be sent to
-//     Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
-//     Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
-//
-//---------------------------------------------------------------
+/// \file CXRunData.cc
+/// \brief Implementation of the CXRunData class
 
-class B4xTrackingAction;
+#include "CXRunData.hh"
+#include "CXAnalysis.hh"
 
-#ifndef B4xTrackingAction_h
-#define B4xTrackingAction_h 1
+#include "G4RunManager.hh"
+#include "G4UnitsTable.hh"
 
-#include "G4UserTrackingAction.hh"
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-
-class G4TrackingManager;              // Forward declaration
-class G4Track;
-
-///////////////////////////
-class B4xTrackingAction : public G4UserTrackingAction
-///////////////////////////
+CXRunData::CXRunData() 
+ : G4Run(),
+   fVolumeNames{ { "Absorber", "Gap" } }
 {
+  for ( auto& edep : fEdep ) { 
+    edep = 0.; 
+  }
+  for ( auto& trackLength : fTrackLength ) {
+    trackLength = 0.; 
+  }
+}
 
-//--------
-public: // with description
-//--------
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-// Constructor & Destructor
-   B4xTrackingAction();
-   virtual ~B4xTrackingAction();
+CXRunData::~CXRunData()
+{;}
 
-// Member functions
-   void SetTrackingManagerPointer(G4TrackingManager* pValue);
-   void PreUserTrackingAction(const G4Track*);
-   void PostUserTrackingAction(const G4Track*);
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-//----------- 
-   protected:
-//----------- 
+void CXRunData::FillPerEvent()
+{
+  // get analysis manager
+  auto analysisManager = G4AnalysisManager::Instance();
 
-// Member data
-   G4TrackingManager* fpTrackingManager;
+  // accumulate statistic
+  // in the order od the histograms, ntuple columns declarations
+  G4int counter = 0;
+  for ( auto edep : fEdep ) {
+    analysisManager->FillH1(counter, edep);
+    analysisManager->FillNtupleDColumn(counter++, edep);
+  }
+  for ( auto trackLength : fTrackLength ) {
+    analysisManager->FillH1(counter, trackLength);
+    analysisManager->FillNtupleDColumn(counter++, trackLength);
+  }  
+  analysisManager->AddNtupleRow();  
+}
 
-};
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#endif
+void CXRunData::Reset()
+{ 
+  for ( auto& edep : fEdep ) { 
+    edep = 0.; 
+  }
+  for ( auto& trackLength : fTrackLength ) {
+    trackLength = 0.; 
+  }
+}
 
-
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
