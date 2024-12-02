@@ -50,7 +50,7 @@ class G4GlobalMagFieldMessenger;
 /// In addition a transverse uniform magnetic field is defined 
 /// via G4GlobalMagFieldMessenger class.
 
-class CXDetectorConstruction : public CXVUserDetectorConstruction
+class CXDetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
     CXDetectorConstruction();
