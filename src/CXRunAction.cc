@@ -104,7 +104,7 @@ void CXRunAction::BeginOfRunAction(const G4Run* run)
 
   // Open an output file
   //
-  G4String fileName = "CX";
+  G4String fileName = "CX.root";
   analysisManager->OpenFile(fileName);
 }
 
