@@ -27,60 +27,37 @@
 /// \file CXRunAction.cc
 /// \brief Implementation of the CXRunAction class
 
+#include <sstream>
+
 #include "CXRunAction.hh"
 #include "CXRunData.hh"
 #include "CXAnalysis.hh"
+#include "CXHDF5.hh"
 
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
+#include "G4LogicalVolumeStore.hh"
+#include "G4Box.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-CXRunAction::CXRunAction()
- : G4UserRunAction()
+CXRunAction::CXRunAction(CX::CXHDF5 * output)
+ : G4UserRunAction(), data_out_(output)
 { 
   // set printing event number per each event
   G4RunManager::GetRunManager()->SetPrintProgress(1);     
 
-  // Create analysis manager
-  // The choice of analysis technology is done via selectin of a namespace
-  // in CXAnalysis.hh
-  auto analysisManager = G4AnalysisManager::Instance();
-  G4cout << "Using " << analysisManager->GetType() << G4endl;
-
-  // Create directories 
-  //analysisManager->SetHistoDirectoryName("histograms");
-  //analysisManager->SetNtupleDirectoryName("ntuple");
-  analysisManager->SetVerboseLevel(1);
-  analysisManager->SetNtupleMerging(true);
-    // Note: merging ntuples is available only with Root output
-
-  // Book histograms, ntuple
-  //
-  
-  // Creating histograms
-  analysisManager->CreateH1("Eabs","Edep in absorber", 100, 0., 800*MeV);
-  analysisManager->CreateH1("Egap","Edep in gap", 100, 0., 100*MeV);
-  analysisManager->CreateH1("Labs","trackL in absorber", 100, 0., 1*m);
-  analysisManager->CreateH1("Lgap","trackL in gap", 100, 0., 50*cm);
-
-  // Creating ntuple
-  //
-  analysisManager->CreateNtuple("CX", "Edep and TrackL");
-  analysisManager->CreateNtupleDColumn("Eabs");
-  analysisManager->CreateNtupleDColumn("Egap");
-  analysisManager->CreateNtupleDColumn("Labs");
-  analysisManager->CreateNtupleDColumn("Lgap");
-  analysisManager->FinishNtuple();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 CXRunAction::~CXRunAction()
 {
-  delete G4AnalysisManager::Instance();  
+  //delete G4AnalysisManager::Instance();  
+  delete data_out_;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -94,61 +71,51 @@ G4Run* CXRunAction::GenerateRun()
 
 void CXRunAction::BeginOfRunAction(const G4Run* run)
 { 
-  G4cout << "### Run " << run->GetRunID() << " start." << G4endl;
+  G4cout << "### Run " << run->GetRunID() << " start on "
+    << " thread "
+    << G4Threading::G4GetThreadId() << G4endl;
 
-  //inform the runManager to save random number seed
-  //G4RunManager::GetRunManager()->SetRandomNumberStore(true);
-  
-  // Get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
+  // get geometry store
+  auto calorLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Calorimeter");
+  G4Box *calorBox = dynamic_cast<G4Box*>(calorLV->GetSolid());
 
-  // Open an output file
-  //
-  G4String fileName = "CX.root";
-  analysisManager->OpenFile(fileName);
+  double caloXhalf = calorBox->GetXHalfLength();
+  double caloYhalf = calorBox->GetYHalfLength();
+  double caloZhalf = calorBox->GetZHalfLength();
+
+  auto layerLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Layer");
+  G4Box *layerBox = dynamic_cast<G4Box*>(layerLV->GetSolid());
+  double caloDz = layerBox->GetZHalfLength()*2.;
+  double caloDx = caloDz;
+  double caloDy = caloDz;
+
+  unsigned Nx = ((caloXhalf*2.)/caloDx) + 0.01;
+  unsigned Ny = ((caloYhalf*2.)/caloDy) + 0.01;
+  unsigned Nz = ((caloZhalf*2.)/caloDz) + 0.01;
+
+  G4cout << "Initializing HDF5 data with " <<
+    "(" << Nx << ", " << Ny << ", " << Nz << ")" << G4endl;
+
+  std::vector<int> dims(3);
+  dims[0] = Nx;
+  dims[1] = Ny;
+  dims[2] = Nz;
+  data_out_->initialize(dims);
+
+  int thrd = G4Threading::G4GetThreadId();
+  std::stringstream ofilename;
+  ofilename << "CaloX_run_"
+    << run->GetRunID() << "_t_"
+    << G4Threading::G4GetThreadId()
+    << ".h5";
+  data_out_->open_file(ofilename.str());
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void CXRunAction::EndOfRunAction(const G4Run* /*aRun*/)
 {
-  // print histogram statistics
-  //
-  auto analysisManager = G4AnalysisManager::Instance();
-  if ( analysisManager->GetH1(1) ) {
-    G4cout << G4endl << " ----> print histograms statistic ";
-    if(isMaster) {
-      G4cout << "for the entire run " << G4endl << G4endl; 
-    }
-    else {
-      G4cout << "for the local thread " << G4endl << G4endl; 
-    }
-    
-    G4cout << " EAbs : mean = " 
-       << G4BestUnit(analysisManager->GetH1(0)->mean(), "Energy") 
-       << " rms = " 
-       << G4BestUnit(analysisManager->GetH1(0)->rms(),  "Energy") << G4endl;
-    
-    G4cout << " EGap : mean = " 
-       << G4BestUnit(analysisManager->GetH1(1)->mean(), "Energy") 
-       << " rms = " 
-       << G4BestUnit(analysisManager->GetH1(1)->rms(),  "Energy") << G4endl;
-    
-    G4cout << " LAbs : mean = " 
-      << G4BestUnit(analysisManager->GetH1(2)->mean(), "Length") 
-      << " rms = " 
-      << G4BestUnit(analysisManager->GetH1(2)->rms(),  "Length") << G4endl;
-
-    G4cout << " LGap : mean = " 
-      << G4BestUnit(analysisManager->GetH1(3)->mean(), "Length") 
-      << " rms = " 
-      << G4BestUnit(analysisManager->GetH1(3)->rms(),  "Length") << G4endl;
-  }
-
-  // save histograms & ntuple
-  //
-  analysisManager->Write();
-  analysisManager->CloseFile();
 
 }
 

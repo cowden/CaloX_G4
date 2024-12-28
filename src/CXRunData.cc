@@ -50,27 +50,12 @@ CXRunData::CXRunData()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 CXRunData::~CXRunData()
-{;}
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void CXRunData::FillPerEvent()
 {
-  // get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
-
-  // accumulate statistic
-  // in the order od the histograms, ntuple columns declarations
-  G4int counter = 0;
-  for ( auto edep : fEdep ) {
-    analysisManager->FillH1(counter, edep);
-    analysisManager->FillNtupleDColumn(counter++, edep);
-  }
-  for ( auto trackLength : fTrackLength ) {
-    analysisManager->FillH1(counter, trackLength);
-    analysisManager->FillNtupleDColumn(counter++, trackLength);
-  }  
-  analysisManager->AddNtupleRow();  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

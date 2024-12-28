@@ -35,36 +35,39 @@
 #include "CXSteppingAction.hh"
 #include "G4MTRunManager.hh"
 #include "CXDetectorConstruction.hh"
+#include "CXHDF5.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 CXActionInitialization::CXActionInitialization(CXDetectorConstruction* det)
  : G4VUserActionInitialization(),fDetector(det)
-{}
+{ }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 CXActionInitialization::~CXActionInitialization()
-{}
+{ }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void CXActionInitialization::BuildForMaster() const
 {
-  SetUserAction(new CXRunAction);
+  CX::CXHDF5 * data_out_ = new CX::CXHDF5(); 
+  SetUserAction(new CXRunAction(data_out_));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void CXActionInitialization::Build() const
 {
+  CX::CXHDF5 * data_out_ = new CX::CXHDF5(); 
   CXPrimaryGeneratorAction* primary = new CXPrimaryGeneratorAction(fDetector);
   SetUserAction(primary);
   //SetUserAction(new CXPrimaryGeneratorAction);
 
-  SetUserAction(new CXRunAction);
+  SetUserAction(new CXRunAction(data_out_));
   // SetUserAction(new CXEventAction);
-  CXEventAction* eventaction = new CXEventAction(fDetector,primary);
+  CXEventAction* eventaction = new CXEventAction(fDetector,primary,data_out_);
   SetUserAction(eventaction);  
 
   SetUserAction(new CXTrackingAction);

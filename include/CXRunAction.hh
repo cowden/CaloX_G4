@@ -35,6 +35,9 @@
 
 class G4Run;
 
+namespace CX { class CXHDF5; }
+
+
 /// Run action class
 ///
 /// It accumulates statistic and computes dispersion of the energy deposit 
@@ -56,13 +59,16 @@ class G4Run;
 class CXRunAction : public G4UserRunAction
 {
   public:
-    CXRunAction();
+    CXRunAction(CX::CXHDF5 *);
     virtual ~CXRunAction();
 
     virtual G4Run* GenerateRun();
 
     virtual void BeginOfRunAction(const G4Run*);
     virtual void   EndOfRunAction(const G4Run*);
+
+private:
+    CX::CXHDF5 * data_out_;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

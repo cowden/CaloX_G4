@@ -51,6 +51,8 @@
 
 #include "CaloDataStruc.h"
 
+namespace CX { class CXHDF5; }
+
 using namespace std;
 
 /// Event action class
@@ -62,7 +64,7 @@ using namespace std;
 class CXEventAction : public G4UserEventAction
 {
   public:
-    CXEventAction(CXDetectorConstruction* det,CXPrimaryGeneratorAction* prim);
+    CXEventAction(CXDetectorConstruction* det,CXPrimaryGeneratorAction* prim, CX::CXHDF5 * output);
     virtual ~CXEventAction();
 
     virtual void  BeginOfEventAction(const G4Event* event);
@@ -224,6 +226,10 @@ class CXEventAction : public G4UserEventAction
     std::vector<float> mFrontLeakKinE;
     std::vector<float> mFrontLeakSum;
     std::vector<int>   mFrontLeakCounts;
+
+    std::vector<float> raw_data_;
+
+    CX::CXHDF5 * data_out_;
 
 };
 

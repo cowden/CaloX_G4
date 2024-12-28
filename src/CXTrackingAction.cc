@@ -68,19 +68,6 @@ CXTrackingAction::~CXTrackingAction()
 
 //
 void CXTrackingAction::PreUserTrackingAction(const G4Track* track){
-  /*
-   const G4DynamicParticle* dynamicParticle= track->GetDynamicParticle();
-   G4int pdgcode=dynamicParticle->GetPDGcode();
-   // G4int absPdgCode=abs(pdgcode);
-   const G4ThreeVector& vtx=track->GetVertexPosition();
-
-   if(track->GetTrackID() == 1) {
-     std::cout<<"begin of track "<<track->GetTrackID()
-            <<"   pID "<<pdgcode
-            <<"   vtx x "<<vtx.x()<<" y "<<vtx.y()<<" z "<<vtx.z()
-            <<std::endl;
-   }
-  */
 }
 
 //

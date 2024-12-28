@@ -3,7 +3,7 @@
 # Setup the project
 #
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(B4b)
+project(calox-hgcal)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -19,6 +19,8 @@ endif()
 
 find_package(ROOT REQUIRED COMPONENTS RIO)
 
+set(HDF5DIR /usr/local/HDF_Group/HDF5/1.14.5)
+
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
 # Setup include directory for this project
@@ -26,6 +28,8 @@ find_package(ROOT REQUIRED COMPONENTS RIO)
 include(${Geant4_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${ROOT_INCLUDE_DIRS})
+include_directories(${HDF5DIR}/include)
+
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
@@ -39,10 +43,12 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #
 add_executable(calox-hgcal calox-hgcal.cc ${sources} ${headers})
 target_link_libraries(calox-hgcal ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+target_link_directories(calox-hgcal PRIVATE ${HDF5DIR}/lib)
+target_link_libraries(calox-hgcal libhdf5.so)
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
-# build B4b. This is so that we can run the executable directly because it
+# build calox-hgcal. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
 set(EXAMPLEB4B_SCRIPTS
