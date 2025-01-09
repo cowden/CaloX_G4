@@ -36,12 +36,16 @@
 #include "G4MTRunManager.hh"
 #include "CXDetectorConstruction.hh"
 #include "CXHDF5.hh"
+#include "CXActionMessenger.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 CXActionInitialization::CXActionInitialization(CXDetectorConstruction* det)
- : G4VUserActionInitialization(),fDetector(det)
-{ }
+ : G4VUserActionInitialization(),fDetector(det),
+ baseName_("CaloX")
+{
+    msngr_ = new CX::ActionMessenger(this); 
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -53,6 +57,7 @@ CXActionInitialization::~CXActionInitialization()
 void CXActionInitialization::BuildForMaster() const
 {
   CX::CXHDF5 * data_out_ = new CX::CXHDF5(); 
+  data_out_->set_base_name(this->baseName_);
   SetUserAction(new CXRunAction(data_out_));
 }
 
@@ -61,6 +66,7 @@ void CXActionInitialization::BuildForMaster() const
 void CXActionInitialization::Build() const
 {
   CX::CXHDF5 * data_out_ = new CX::CXHDF5(); 
+  data_out_->set_base_name(this->baseName_);
   CXPrimaryGeneratorAction* primary = new CXPrimaryGeneratorAction(fDetector);
   SetUserAction(primary);
   //SetUserAction(new CXPrimaryGeneratorAction);

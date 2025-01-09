@@ -1,0 +1,9 @@
+
+/trm/seed 42
+/uui/name CaloX_run_0
+/run/initialize
+
+/gun/particle pi-
+/gun/energy 500 GeV
+
+/run/beamOn 1000

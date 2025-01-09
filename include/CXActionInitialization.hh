@@ -32,7 +32,12 @@
 
 #include "G4VUserActionInitialization.hh"
 
+#include "G4String.hh"
+
 class CXDetectorConstruction;
+namespace CX {
+    class ActionMessenger;
+}
 
 /// Action initialization class.
 ///
@@ -46,8 +51,14 @@ class CXActionInitialization : public G4VUserActionInitialization
     virtual void BuildForMaster() const;
     virtual void Build() const;
 
+    void SetBaseName(G4String name) { baseName_ = name; }
+    G4String GetBaseName() { return baseName_; }
+
   private:
     CXDetectorConstruction* fDetector;
+    CX::ActionMessenger * msngr_;
+
+    G4String baseName_;
 };
 
 #endif

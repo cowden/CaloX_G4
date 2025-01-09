@@ -6,12 +6,14 @@
 
 #include "hdf5.h"
 
+#include "G4String.hh"
+
 namespace CX {
 
 class CXHDF5 {
 public:
 
-    CXHDF5():dims_(1.,0) { }
+    CXHDF5():dims_(1.,0),baseName_("CaloX") { }
     ~CXHDF5() { }
     
     ///
@@ -43,6 +45,14 @@ public:
     /// return size
     unsigned size() const;
 
+    ///
+    /// set the base name
+    void set_base_name(const G4String & name) { baseName_ = name; }
+
+    ///
+    /// get base name
+    G4String get_base_name() const { return baseName_; }
+
 
 private:
 
@@ -54,6 +64,8 @@ private:
     hid_t primgrp_;
    
     std::vector<hsize_t> dims_; 
+
+    G4String baseName_;
 
 };
 

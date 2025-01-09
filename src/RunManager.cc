@@ -4,7 +4,7 @@
 #include "RunManagerMessenger.hh"
 
 CX::TheRunManager::TheRunManager()
-:G4MTRunManager()	
+:G4MTRunManager()
 {
     msngr_ = new RunManagerMessenger(this);
 }

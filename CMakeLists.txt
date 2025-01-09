@@ -55,6 +55,7 @@ set(EXAMPLEB4B_SCRIPTS
   gui.mac
   init_vis.mac
   vis.mac
+  run.mac
   )
 
 foreach(_script ${EXAMPLEB4B_SCRIPTS})

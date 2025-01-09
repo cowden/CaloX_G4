@@ -32,6 +32,7 @@
 #include "CXRunAction.hh"
 #include "CXRunData.hh"
 #include "CXAnalysis.hh"
+#include "RunManager.hh"
 #include "CXHDF5.hh"
 
 #include "G4Run.hh"
@@ -75,40 +76,43 @@ void CXRunAction::BeginOfRunAction(const G4Run* run)
     << " thread "
     << G4Threading::G4GetThreadId() << G4endl;
 
-  // get geometry store
-  auto calorLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Calorimeter");
-  G4Box *calorBox = dynamic_cast<G4Box*>(calorLV->GetSolid());
+  if ( G4Threading::G4GetThreadId() >= 0 ) {
 
-  double caloXhalf = calorBox->GetXHalfLength();
-  double caloYhalf = calorBox->GetYHalfLength();
-  double caloZhalf = calorBox->GetZHalfLength();
+      // get geometry store
+      auto calorLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Calorimeter");
+      G4Box *calorBox = dynamic_cast<G4Box*>(calorLV->GetSolid());
 
-  auto layerLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Layer");
-  G4Box *layerBox = dynamic_cast<G4Box*>(layerLV->GetSolid());
-  double caloDz = layerBox->GetZHalfLength()*2.;
-  double caloDx = caloDz;
-  double caloDy = caloDz;
+      double caloXhalf = calorBox->GetXHalfLength();
+      double caloYhalf = calorBox->GetYHalfLength();
+      double caloZhalf = calorBox->GetZHalfLength();
 
-  unsigned Nx = ((caloXhalf*2.)/caloDx) + 0.01;
-  unsigned Ny = ((caloYhalf*2.)/caloDy) + 0.01;
-  unsigned Nz = ((caloZhalf*2.)/caloDz) + 0.01;
+      auto layerLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Layer");
+      G4Box *layerBox = dynamic_cast<G4Box*>(layerLV->GetSolid());
+      double caloDz = layerBox->GetZHalfLength()*2.;
+      double caloDx = caloDz;
+      double caloDy = caloDz;
 
-  G4cout << "Initializing HDF5 data with " <<
-    "(" << Nx << ", " << Ny << ", " << Nz << ")" << G4endl;
+      unsigned Nx = ((caloXhalf*2.)/caloDx) + 0.01;
+      unsigned Ny = ((caloYhalf*2.)/caloDy) + 0.01;
+      unsigned Nz = ((caloZhalf*2.)/caloDz) + 0.01;
 
-  std::vector<int> dims(3);
-  dims[0] = Nx;
-  dims[1] = Ny;
-  dims[2] = Nz;
-  data_out_->initialize(dims);
+      G4cout << "Initializing HDF5 data with " <<
+        "(" << Nx << ", " << Ny << ", " << Nz << ")" << G4endl;
 
-  int thrd = G4Threading::G4GetThreadId();
-  std::stringstream ofilename;
-  ofilename << "CaloX_run_"
-    << run->GetRunID() << "_t_"
-    << G4Threading::G4GetThreadId()
-    << ".h5";
-  data_out_->open_file(ofilename.str());
+      std::vector<int> dims(3);
+      dims[0] = Nx;
+      dims[1] = Ny;
+      dims[2] = Nz;
+      data_out_->initialize(dims);
+
+      int thrd = G4Threading::G4GetThreadId();
+      std::stringstream ofilename;
+      ofilename << data_out_->get_base_name() 
+        << "_t_"
+        << G4Threading::G4GetThreadId()
+        << ".h5";
+      data_out_->open_file(ofilename.str());
+  }
 
 }
 
